@@ -17,54 +17,11 @@ This assignment took me about **TODO** hours to do.
 
 
 ## YOUR RESPONSES
-### Automation #1
-a. Design inspiration (e.g. cite the best-practices and/or sub-agents docs)
-> TODO
+## How you used the automation to enhance the starter application
+Using GitHub Copilot as the agent interface, I referenced the `CLAUDE.md` guidance and `tests.md` command to build a new `/health` route for the application using strict TDD.
 
-b. Design of each automation, including goals, inputs/outputs, steps
-> TODO
-
-c. How to run it (exact commands), expected outputs, and rollback/safety notes
-> TODO
-
-d. Before vs. after (i.e. manual workflow vs. automated workflow)
-> TODO
-
-e. How you used the automation to enhance the starter application
-> TODO
-
-
-### Automation #2
-a. Design inspiration (e.g. cite the best-practices and/or sub-agents docs)
-> TODO
-
-b. Design of each automation, including goals, inputs/outputs, steps
-> TODO
-
-c. How to run it (exact commands), expected outputs, and rollback/safety notes
-> TODO
-
-d. Before vs. after (i.e. manual workflow vs. automated workflow)
-> TODO
-
-e. How you used the automation to enhance the starter application
-> TODO
-
-
-### *(Optional) Automation #3*
-*If you choose to build additional automations, feel free to detail them here!*
-
-a. Design inspiration (e.g. cite the best-practices and/or sub-agents docs)
-> TODO
-
-b. Design of each automation, including goals, inputs/outputs, steps
-> TODO
-
-c. How to run it (exact commands), expected outputs, and rollback/safety notes
-> TODO
-
-d. Before vs. after (i.e. manual workflow vs. automated workflow)
-> TODO
-
-e. How you used the automation to enhance the starter application
-> TODO
+1. **Prompting the Agent:** I prompted Copilot with: *"I want to add a `/health` endpoint to the FastAPI app. Please follow the instructions in #file:CLAUDE.md to do this using TDD. After generating the code, execute the workflow described in #file:tests.md."*
+2. **Writing the Test First:** Constrained by `CLAUDE.md`, Copilot correctly generated a failing test (`test_health.py`) that expected a 200 status with `{"status":"ok"}`. 
+3. **Execution & Failure:** It automatically triggered the test-runner workflow. As expected in TDD, the test initially failed with a `404 Not Found`.
+4. **Implementation:** Copilot then wrote the actual endpoint logic in `main.py` to satisfy the failing test.
+5. **Verification:** Finally, it re-ran the workflow defined in `tests.md` (which included formatting via `make format`, linting via `make lint`, and testing via `pytest` with `PYTHONPATH=.`). The execution returned a success message, confirming that the new endpoint passed all tests without breaking existing ones and complied with all formatting rules.

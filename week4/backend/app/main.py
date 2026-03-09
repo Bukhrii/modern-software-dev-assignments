@@ -32,3 +32,9 @@ async def root() -> FileResponse:
 # Routers
 app.include_router(notes_router.router)
 app.include_router(action_items_router.router)
+
+
+@app.get("/health")
+def health() -> dict:
+    """Simple endpoint returning service health status."""
+    return {"status": "ok"}
