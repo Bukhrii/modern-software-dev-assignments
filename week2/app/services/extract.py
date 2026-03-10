@@ -30,6 +30,52 @@ def _is_action_line(line: str) -> bool:
         return True
     return False
 
+def extract_action_items_llm(text: str) -> List[str]:
+    """Extract action items using Ollama with structured outputs."""
+    try:
+        response = chat(
+            model="llama3.2:1b",
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"""Extract all action items from the following text. 
+                    Return a JSON array of strings where each string is a single action item.
+                    Only return valid JSON, no other text.
+
+    Text:
+    {text}""",
+                }
+            ],
+            format="json",
+        )
+
+        content = response["message"]["content"].strip()
+        
+        # Parse JSON response
+        items = json.loads(content)
+        
+        if not isinstance(items, list):
+            return []
+            
+        # Ensure all items are strings and non-empty
+        cleaned = [str(item).strip() for item in items if item]
+        
+        # Deduplicate while preserving order
+        seen: set[str] = set()
+        unique: List[str] = []
+        for item in cleaned:
+            lowered = item.lower()
+            if lowered not in seen:
+                seen.add(lowered)
+                unique.append(item)
+            
+        return unique
+            
+    except json.JSONDecodeError:
+        return []
+    except Exception as e:
+        print(f"Error calling Ollama: {e}")
+        return []
 
 def extract_action_items(text: str) -> List[str]:
     lines = text.splitlines()
