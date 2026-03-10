@@ -15,6 +15,11 @@ class NoteRead(BaseModel):
         from_attributes = True
 
 
+class PaginatedNoteResponse(BaseModel):
+    items: list[NoteRead]
+    total: int
+
+
 class ActionItemCreate(BaseModel):
     description: str
 
@@ -26,3 +31,8 @@ class ActionItemRead(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class PaginatedActionItemResponse(BaseModel):
+    items: list[ActionItemRead]
+    total: int

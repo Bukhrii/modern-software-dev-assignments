@@ -7,8 +7,8 @@ async function fetchJSON(url, options) {
 async function loadNotes() {
   const list = document.getElementById('notes');
   list.innerHTML = '';
-  const notes = await fetchJSON('/notes/');
-  for (const n of notes) {
+  const data = await fetchJSON('/notes/');
+  for (const n of data.items) {
     const li = document.createElement('li');
     li.textContent = `${n.title}: ${n.content}`;
     list.appendChild(li);
@@ -18,8 +18,8 @@ async function loadNotes() {
 async function loadActions() {
   const list = document.getElementById('actions');
   list.innerHTML = '';
-  const items = await fetchJSON('/action-items/');
-  for (const a of items) {
+  const data = await fetchJSON('/action-items/');
+  for (const a of data.items) {
     const li = document.createElement('li');
     li.textContent = `${a.description} [${a.completed ? 'done' : 'open'}]`;
     if (!a.completed) {
