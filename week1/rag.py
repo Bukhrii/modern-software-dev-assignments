@@ -37,7 +37,13 @@ QUESTION = (
 
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = """
+You are an expert Python backend developer. 
+Your task is to write a precise Python function based EXACTLY on the provided context (API documentation).
+Rule 1: Use the exact headers, endpoints, and JSON keys defined in the context.
+Rule 2: Output ONLY a single fenced Python code block (```python ... ```).
+Rule 3: Zero verbosity. No conversational text, no explanations before or after the code block.
+"""
 
 
 # For this simple example
@@ -56,7 +62,7 @@ def YOUR_CONTEXT_PROVIDER(corpus: List[str]) -> List[str]:
 
     For example, return [] to simulate missing context, or [corpus[0]] to include the API docs.
     """
-    return []
+    return corpus
 
 
 def make_user_prompt(question: str, context_docs: List[str]) -> str:

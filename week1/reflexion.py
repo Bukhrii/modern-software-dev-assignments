@@ -9,13 +9,25 @@ load_dotenv()
 NUM_RUNS_TIMES = 1
 
 SYSTEM_PROMPT = """
-You are a coding assistant. Output ONLY a single fenced Python code block that defines
-the function is_valid_password(password: str) -> bool. No prose or comments.
-Keep the implementation minimal.
+You are an expert Python developer tasked with fixing failing code based on test results.
+Analyze the previous code and the list of test failures.
+
+STRICT RULES:
+1. Fix the logic in the function to pass all tests.
+2. Output ONLY a single fenced Python code block (```python ... ```) with the corrected `is_valid_password` function.
+3. DO NOT include any explanations, docstrings, or text outside the code block.
 """
 
 # TODO: Fill this in!
-YOUR_REFLEXION_PROMPT = ""
+YOUR_REFLEXION_PROMPT = """
+You are an expert Python developer tasked with fixing failing code based on test results.
+Analyze the previous code and the list of test failures.
+
+STRICT RULES:
+1. Fix the logic in the function to pass all tests.
+2. Output ONLY a single fenced Python code block (```python ... ```) with the corrected `is_valid_password` function.
+3. DO NOT include any explanations, docstrings, or text outside the code block.
+"""
 
 
 # Ground-truth test suite used to evaluate generated code
@@ -96,7 +108,17 @@ def your_build_reflexion_context(prev_code: str, failures: List[str]) -> str:
 
     Return a string that will be sent as the user content alongside the reflexion system prompt.
     """
-    return ""
+    failures_text = "\n".join(f"- {f}" for f in failures)
+    return (
+        f"Here is your previous code:\n```python\n{prev_code}\n```\n\n"
+        f"It failed the following test cases:\n{failures_text}\n\n"
+        "Please fix the code. The password MUST meet ALL of the following criteria:\n"
+        "1. Length >= 8\n"
+        "2. At least one uppercase letter (isupper)\n"
+        "3. At least one lowercase letter (islower)\n"
+        "4. At least one digit (isdigit)\n"
+        "5. At least one special character from this exact set: !@#$%^&*()-_"
+    )
 
 
 def apply_reflexion(

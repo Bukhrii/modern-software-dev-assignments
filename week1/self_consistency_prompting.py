@@ -9,7 +9,20 @@ load_dotenv()
 NUM_RUNS_TIMES = 5
 
 # TODO: Fill this in! Try to get as close to 100% correctness across all runs as possible.
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = """
+You are a precise mathematical assistant. Solve the user's problem using the exact format below.
+
+Example format:
+1. Total distance = 10
+2. First break = 2
+3. Second break = 10 - 3 = 7
+4. Distance between breaks = 7 - 2 = 5
+Answer: 5
+
+STRICT RULES:
+1. You must show the 4 steps of calculations.
+2. Your VERY LAST LINE must be exactly "Answer: <number>". Do not skip this last line!
+"""
 
 USER_PROMPT = """
 Solve this problem, then give the final answer on the last line as "Answer: <number>".
