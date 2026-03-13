@@ -70,3 +70,21 @@ def patch_item(item_id: int, payload: ActionItemPatch, db: Session = Depends(get
     return ActionItemRead.model_validate(item)
 
 
+@router.get("/{item_id}", response_model=ActionItemRead)
+def get_item(item_id: int, db: Session = Depends(get_db)) -> ActionItemRead:
+    item = db.get(ActionItem, item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Action item not found")
+    return ActionItemRead.model_validate(item)
+
+
+@router.delete("/{item_id}")
+def delete_item(item_id: int, db: Session = Depends(get_db)) -> dict:
+    item = db.get(ActionItem, item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Action item not found")
+    db.delete(item)
+    db.flush()
+    return {"detail": "Action item deleted successfully"}
+
+
