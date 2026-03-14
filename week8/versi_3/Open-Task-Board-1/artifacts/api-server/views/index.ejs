@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shared Task Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .status-badge-todo    { background-color: #e2e8f0; color: #475569; }
+    .status-badge-inprog  { background-color: #dbeafe; color: #1d4ed8; }
+    .status-badge-done    { background-color: #dcfce7; color: #16a34a; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans">
+
+  <header class="bg-white border-b border-slate-200 shadow-sm">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+      </svg>
+      <h1 class="text-2xl font-bold text-slate-800">Shared Task Board</h1>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-8">
+
+    <% if (error) { %>
+    <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+      </svg>
+      <%= error %>
+    </div>
+    <% } %>
+
+    <!-- Add Task Form -->
+    <section class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8">
+      <h2 class="text-lg font-semibold text-slate-700 mb-4">Add New Task</h2>
+      <form method="POST" action="/tasks" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="md:col-span-2">
+          <label for="title" class="block text-sm font-medium text-slate-600 mb-1">Title <span class="text-red-500">*</span></label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Enter task title..."
+            required
+            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+        </div>
+        <div class="md:col-span-1">
+          <label for="description" class="block text-sm font-medium text-slate-600 mb-1">Description</label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            placeholder="Optional description..."
+            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+        </div>
+        <div class="md:col-span-1">
+          <label for="status" class="block text-sm font-medium text-slate-600 mb-1">Status</label>
+          <div class="flex gap-2">
+            <select
+              id="status"
+              name="status"
+              class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            >
+              <option value="to-do">To Do</option>
+              <option value="in-progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Board Columns -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- To Do -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+          <h2 class="text-sm font-semibold text-slate-600 uppercase tracking-wide">To Do</h2>
+          <span class="ml-auto text-xs bg-slate-100 text-slate-500 font-medium px-2 py-0.5 rounded-full"><%= grouped['to-do'].length %></span>
+        </div>
+        <% if (grouped['to-do'].length === 0) { %>
+          <div class="text-center py-10 text-slate-400 text-sm border-2 border-dashed border-slate-200 rounded-xl">No tasks yet</div>
+        <% } %>
+        <% grouped['to-do'].forEach(function(task) { %>
+          <%- include('partials/task-card', { task: task }) %>
+        <% }); %>
+      </div>
+
+      <!-- In Progress -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+          <h2 class="text-sm font-semibold text-slate-600 uppercase tracking-wide">In Progress</h2>
+          <span class="ml-auto text-xs bg-blue-50 text-blue-500 font-medium px-2 py-0.5 rounded-full"><%= grouped['in-progress'].length %></span>
+        </div>
+        <% if (grouped['in-progress'].length === 0) { %>
+          <div class="text-center py-10 text-slate-400 text-sm border-2 border-dashed border-slate-200 rounded-xl">No tasks yet</div>
+        <% } %>
+        <% grouped['in-progress'].forEach(function(task) { %>
+          <%- include('partials/task-card', { task: task }) %>
+        <% }); %>
+      </div>
+
+      <!-- Done -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+          <h2 class="text-sm font-semibold text-slate-600 uppercase tracking-wide">Done</h2>
+          <span class="ml-auto text-xs bg-green-50 text-green-600 font-medium px-2 py-0.5 rounded-full"><%= grouped['done'].length %></span>
+        </div>
+        <% if (grouped['done'].length === 0) { %>
+          <div class="text-center py-10 text-slate-400 text-sm border-2 border-dashed border-slate-200 rounded-xl">No tasks yet</div>
+        <% } %>
+        <% grouped['done'].forEach(function(task) { %>
+          <%- include('partials/task-card', { task: task }) %>
+        <% }); %>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

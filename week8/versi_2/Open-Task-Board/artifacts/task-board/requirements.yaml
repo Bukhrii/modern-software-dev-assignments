@@ -1,0 +1,4 @@
+packages:
+  "framer-motion": "For smooth layout animations when moving tasks between columns"
+  "clsx": "For conditional class joining"
+  "tailwind-merge": "For merging tailwind classes safely"

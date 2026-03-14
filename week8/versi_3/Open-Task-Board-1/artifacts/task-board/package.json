@@ -1,0 +1,22 @@
+{
+  "name": "@workspace/task-board",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "better-sqlite3": "*",
+    "ejs": "*",
+    "express": "^5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "*",
+    "@types/ejs": "*",
+    "@types/express": "^5.0.6",
+    "@types/node": "catalog:",
+    "tsx": "catalog:"
+  }
+}
